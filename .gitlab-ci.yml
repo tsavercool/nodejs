@@ -1,0 +1,6 @@
+test_job:
+  stage: test
+  script:
+    - echo "Hello from GitLab Runner!"
+  tags:
+    - docker
