@@ -16,6 +16,8 @@ build_image:
   only:
     - main
     - merge_requests
+  tags:
+    - docker
 
 test_image:
   stage: test
@@ -28,3 +30,5 @@ test_image:
   only:
     - main
     - merge_requests
+  tags:
+    - docker
