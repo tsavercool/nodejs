@@ -9,10 +9,10 @@ variables:
 build_image:
   stage: build
   script:
-    - echo "Building Docker image with Podman..."
-    - podman build -t ${IMAGE_NAME}:${IMAGE_TAG} .
+    - echo "Building Docker image with docker..."
+    - docker build -t ${IMAGE_NAME}:${IMAGE_TAG} .
     - echo "Image built successfully!"
-    - podman images | grep ${IMAGE_NAME}
+    - docker images | grep ${IMAGE_NAME}
   only:
     - main
     - merge_requests
@@ -23,7 +23,7 @@ test_image:
   stage: test
   script:
     - echo "Testing the built image..."
-    - podman run --rm ${IMAGE_NAME}:${IMAGE_TAG}
+    - docker run --rm ${IMAGE_NAME}:${IMAGE_TAG}
     - echo "Container test completed!"
   dependencies:
     - build_image
