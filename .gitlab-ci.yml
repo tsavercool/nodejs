@@ -1,6 +1,30 @@
-test_job:
+stages:
+  - build
+  - test
+
+variables:
+  IMAGE_NAME: "test-app"
+  IMAGE_TAG: "latest"
+
+build_image:
+  stage: build
+  script:
+    - echo "Building Docker image with Podman..."
+    - podman build -t ${IMAGE_NAME}:${IMAGE_TAG} .
+    - echo "Image built successfully!"
+    - podman images | grep ${IMAGE_NAME}
+  only:
+    - main
+    - merge_requests
+
+test_image:
   stage: test
   script:
-    - echo "Hello from GitLab Runner!"
-  tags:
-    - docker
+    - echo "Testing the built image..."
+    - podman run --rm ${IMAGE_NAME}:${IMAGE_TAG}
+    - echo "Container test completed!"
+  dependencies:
+    - build_image
+  only:
+    - main
+    - merge_requests
