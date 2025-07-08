@@ -10,7 +10,7 @@ build_image:
   stage: build
   script:
     - echo "Building Docker image with docker..."
-    - docker build -t ${IMAGE_NAME}:${IMAGE_TAG} .
+    - docker build --build-arg GITLAB_REPO_URL=$CI_PROJECT_URL -t ${IMAGE_NAME}:${IMAGE_TAG} .
     - echo "Saving Docker image as artifact..."
     - docker save ${IMAGE_NAME}:${IMAGE_TAG} -o ${IMAGE_NAME}_${IMAGE_TAG}.tar
     - echo "Image built and saved successfully!"
