@@ -1,27 +1,18 @@
 FROM alpine:latest
 
-# Install basic utilities
+# Install basic utilities and Node.js
 RUN apk add --no-cache \
     curl \
     wget \
-    bash
-
-# Create a simple test file
-RUN echo "Hello from GitLab Runner + Podman!" > /hello.txt
+    bash \
+    nodejs \
+    npm
 
 # Set working directory
 WORKDIR /app
 
-# Copy a simple script
-COPY <<EOF /app/test.sh
-#!/bin/bash
-echo "Container is working!"
-echo "Current date: $(date)"
-cat /hello.txt
-EOF
+# Copy application files
+COPY ./src /app
 
-# Make script executable
-RUN chmod +x /app/test.sh
-
-# Set default command
-CMD ["/app/test.sh"]
+# Set default command to run app.js
+CMD ["node", "app.js"]
