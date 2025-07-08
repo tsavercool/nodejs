@@ -1,6 +1,7 @@
 stages:
   - build
   - test
+  - scan
 
 variables:
   IMAGE_NAME: "test-app"
