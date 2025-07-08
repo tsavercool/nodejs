@@ -1,8 +1,8 @@
+FROM alpine:latest
+
 # Create reference to the GitLab repository URL
 ARG GITLAB_REPO_URL
 LABEL org.opencontainers.image.source=$GITLAB_REPO_URL
-
-FROM alpine:latest
 
 # Install basic utilities and Node.js
 RUN apk add --no-cache \
