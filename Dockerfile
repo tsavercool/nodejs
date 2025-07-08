@@ -1,4 +1,4 @@
-FROM alpine:latest
+FROM alpine:3.17
 
 # Install basic utilities and Node.js
 RUN apk add --no-cache \
@@ -7,6 +7,9 @@ RUN apk add --no-cache \
     bash \
     nodejs \
     npm
+
+# Intentionally install a specific version of CUPS that has known vulnerabilities
+    RUN apk add cups=2.4.2-r3
 
 # Set working directory
 WORKDIR /app
