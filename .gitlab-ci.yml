@@ -11,8 +11,13 @@ build_image:
   script:
     - echo "Building Docker image with docker..."
     - docker build -t ${IMAGE_NAME}:${IMAGE_TAG} .
-    - echo "Image built successfully!"
+    - echo "Saving Docker image as artifact..."
+    - docker save ${IMAGE_NAME}:${IMAGE_TAG} -o ${IMAGE_NAME}_${IMAGE_TAG}.tar
+    - echo "Image built and saved successfully!"
     - docker images | grep ${IMAGE_NAME}
+  artifacts:
+    paths:
+      - ${IMAGE_NAME}_${IMAGE_TAG}.tar
   only:
     - main
     - merge_requests
@@ -23,8 +28,17 @@ test_image:
   stage: test
   script:
     - echo "Testing the built image..."
-    - docker run --rm ${IMAGE_NAME}:${IMAGE_TAG}
-    - echo "Container test completed!"
+    - |
+      CONTAINER_ID=$(docker run -d ${IMAGE_NAME}:${IMAGE_TAG})
+      echo "Container started with ID: $CONTAINER_ID"
+      echo "Waiting 15 seconds to capture logs..."
+      sleep 15
+      echo "Container logs:"
+      docker logs $CONTAINER_ID
+      echo "Stopping and removing container..."
+      docker stop $CONTAINER_ID
+      docker rm $CONTAINER_ID
+      echo "Container test completed!"
   dependencies:
     - build_image
   only:
