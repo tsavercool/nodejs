@@ -9,6 +9,7 @@ RUN apk add --no-cache \
     npm
 
 # Intentionally install a specific version of CUPS that has known vulnerabilities
+RUN apk update
 RUN apk add cups=2.4.2-r3
 
 # Set working directory
