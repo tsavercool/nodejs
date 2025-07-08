@@ -47,3 +47,12 @@ test_image:
     - merge_requests
   tags:
     - docker
+
+scan_image:
+  stage: scan
+  dependencies:
+    - build_image
+  script:
+    - docker load -i ${IMAGE_NAME}_${IMAGE_TAG}.tar
+    - trivy image --exit-code 1 --severity HIGH,CRITICAL ${IMAGE_NAME}:${IMAGE_TAG}
+  allow_failure: true
