@@ -1,7 +1,6 @@
 stages:
   - build
-  - test
-  - scan
+  - validate
 
 variables:
   IMAGE_NAME: "test-app"
@@ -27,7 +26,7 @@ build_image:
     - docker
 
 test_image:
-  stage: test
+  stage: validate
   script:
     - echo "Testing the built image..."
     - |
@@ -50,10 +49,25 @@ test_image:
     - docker
 
 scan_image:
-  stage: scan
+  stage: validate
   dependencies:
     - build_image
   script:
     - docker load -i ${IMAGE_NAME}_${IMAGE_TAG}.tar
     - trivy image --exit-code 1 --severity HIGH,CRITICAL ${IMAGE_NAME}:${IMAGE_TAG}
   allow_failure: true
+
+  cleanup_artifacts:
+    stage: cleanup
+    script:
+      - echo "Cleaning up image artifact..."
+      - rm -f ${IMAGE_NAME}_${IMAGE_TAG}.tar
+      - echo "Cleanup completed!"
+    dependencies:
+      - build_image
+    when: always
+    only:
+      - main
+      - merge_requests
+    tags:
+      - docker
