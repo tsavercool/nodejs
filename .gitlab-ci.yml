@@ -57,17 +57,17 @@ scan_image:
     - trivy image --exit-code 1 --severity HIGH,CRITICAL ${IMAGE_NAME}:${IMAGE_TAG}
   allow_failure: true
 
-  cleanup_artifacts:
-    stage: cleanup
-    script:
-      - echo "Cleaning up image artifact..."
-      - rm -f ${IMAGE_NAME}_${IMAGE_TAG}.tar
-      - echo "Cleanup completed!"
-    dependencies:
-      - build_image
-    when: always
-    only:
-      - main
-      - merge_requests
-    tags:
-      - docker
+  # cleanup_artifacts:
+  #   stage: cleanup
+  #   script:
+  #     - echo "Cleaning up image artifact..."
+  #     - rm -f ${IMAGE_NAME}_${IMAGE_TAG}.tar
+  #     - echo "Cleanup completed!"
+  #   dependencies:
+  #     - build_image
+  #   when: always
+  #   only:
+  #     - main
+  #     - merge_requests
+  #   tags:
+  #     - docker
