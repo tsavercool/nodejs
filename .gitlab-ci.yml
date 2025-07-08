@@ -18,6 +18,7 @@ build_image:
   artifacts:
     paths:
       - ${IMAGE_NAME}_${IMAGE_TAG}.tar
+    expire_in: 1 day
   only:
     - main
     - merge_requests
