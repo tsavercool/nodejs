@@ -31,6 +31,7 @@ build_image:
     - merge_requests
   tags:
     - docker
+    - x86_64
 
 test_image:
   stage: validate
@@ -83,6 +84,7 @@ push_image:
     - merge_requests
   tags:
     - docker
+    - x86_64
 
   # cleanup_artifacts:
   #   stage: cleanup
