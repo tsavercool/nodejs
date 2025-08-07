@@ -7,7 +7,7 @@ variables:
   IMAGE_NAME: "test-app"
   IMAGE_TAG: "latest"
   LBL_IMAGE_TIER: "1"
-  HARBOR_URL: "http://artifactory/artifactory"
+  HARBOR_URL: "harbor.local"
   HARBOR_PORT: "80"
   # HARBOR_USER: "me" # deployed via GitLab CI/CD secret
   # HARBOR_PASSWORD: "your_password" # deployed via GitLab CI/CD secret
