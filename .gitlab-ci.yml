@@ -5,7 +5,7 @@ stages:
 
 variables:
   IMAGE_NAME: "test-app"
-  IMAGE_TAG: "latest"
+  IMAGE_TAG: "v2"
   LBL_IMAGE_TIER: "1"
   HARBOR_URL: "harbor.local"
   HARBOR_PORT: "80"
