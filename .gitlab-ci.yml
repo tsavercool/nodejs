@@ -12,6 +12,7 @@ variables:
   HARBOR_PROJECT: "library"
   # HARBOR_USER: "me" # deployed via GitLab CI/CD secret
   # HARBOR_PASSWORD: "your_password" # deployed via GitLab CI/CD secret
+  TEST_WAIT_TIME: "3" # seconds to wait for container logs
 
 build_image:
   stage: build
@@ -40,8 +41,8 @@ test_image:
     - |
       CONTAINER_ID=$(docker run -d ${IMAGE_NAME}:${IMAGE_TAG})
       echo "Container started with ID: $CONTAINER_ID"
-      echo "Waiting 15 seconds to capture logs..."
-      sleep 15
+      echo "Waiting ${TEST_WAIT_TIME} seconds to capture logs..."
+      sleep ${TEST_WAIT_TIME}      
       echo "Container logs:"
       docker logs $CONTAINER_ID
       echo "Stopping and removing container..."
@@ -75,7 +76,7 @@ push_image:
     - echo "Logging in to local Harbor Docker registry..."
     - docker login ${HARBOR_URL}:${HARBOR_PORT} -u $HARBOR_USER -p $HARBOR_PASSWORD
     - echo "Tagging image for Harbor..."
-    - docker tag ${IMAGE_NAME}:${IMAGE_TAG} ${HARBOR_URL}:${HARBOR_PORT}/${IMAGE_NAME}:${IMAGE_TAG}
+    - docker tag ${IMAGE_NAME}:${IMAGE_TAG} ${HARBOR_URL}:${HARBOR_PORT}/${HARBOR_PROJECT}/${IMAGE_NAME}:${IMAGE_TAG}
     - echo "Pushing image to Harbor..."
     - docker push ${HARBOR_URL}:${HARBOR_PORT}/${HARBOR_PROJECT}/${IMAGE_NAME}:${IMAGE_TAG}
     - echo "Image pushed successfully!"
