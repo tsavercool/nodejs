@@ -1,12 +1,13 @@
 stages:
   - build
   - validate
+  - commit
 
 variables:
   IMAGE_NAME: "test-app"
   IMAGE_TAG: "latest"
   LBL_IMAGE_TIER: "1"
-  ARTIFACTORY_URL: "http://artifactory"
+  ARTIFACTORY_URL: "http://artifactory/artifactory"
   ARTIFACTORY_PORT: "80"
   # ARTIFACTORY_USER: "me" # deployed via GitLab CI/CD secret
   # ARTIFACTORY_PASSWORD: "your_password" # deployed via GitLab CI/CD secret
@@ -63,7 +64,7 @@ scan_image:
   allow_failure: true
 
 push_image:
-  stage: validate
+  stage: commit
   dependencies:
     - build_image
     - test_image
