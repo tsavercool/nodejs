@@ -9,7 +9,7 @@ variables:
   LBL_IMAGE_TIER: "1"
   HARBOR_URL: "harbor.local"
   HARBOR_PORT: "80"
-  HARBOR_PROJECT: "/library/"
+  HARBOR_PROJECT: "library"
   # HARBOR_USER: "me" # deployed via GitLab CI/CD secret
   # HARBOR_PASSWORD: "your_password" # deployed via GitLab CI/CD secret
 
@@ -77,7 +77,7 @@ push_image:
     - echo "Tagging image for Harbor..."
     - docker tag ${IMAGE_NAME}:${IMAGE_TAG} ${HARBOR_URL}:${HARBOR_PORT}/${IMAGE_NAME}:${IMAGE_TAG}
     - echo "Pushing image to Harbor..."
-    - docker push ${HARBOR_URL}:${HARBOR_PORT}/${HARBOR_PROJECT}${IMAGE_NAME}:${IMAGE_TAG}
+    - docker push ${HARBOR_URL}:${HARBOR_PORT}/${HARBOR_PROJECT}/${IMAGE_NAME}:${IMAGE_TAG}
     - echo "Image pushed successfully!"
   only:
     - main
