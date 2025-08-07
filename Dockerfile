@@ -2,7 +2,9 @@ FROM alpine:latest
 
 # Create reference to the GitLab repository URL
 ARG GITLAB_REPO_URL
+ARG LBL_IMAGE_TIER
 LABEL org.opencontainers.image.source=$GITLAB_REPO_URL
+LABEL org.devexp.image.tier=$LBL_IMAGE_TIER
 
 # Install basic utilities and Node.js
 RUN apk add --no-cache \

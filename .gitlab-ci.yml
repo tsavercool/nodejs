@@ -5,12 +5,16 @@ stages:
 variables:
   IMAGE_NAME: "test-app"
   IMAGE_TAG: "latest"
+  LBL_IMAGE_TIER: "1"
+  ARTIFACTORY_URL: "artifactory"
+  ARTIFACTORY_USER: "me"
+  # ARTIFACTORY_PASSWORD: "your_password" # deployed via GitLab CI/CD secret
 
 build_image:
   stage: build
   script:
     - echo "Building Docker image with docker..."
-    - docker build --build-arg GITLAB_REPO_URL=$CI_PROJECT_URL -t ${IMAGE_NAME}:${IMAGE_TAG} .
+    - docker build --build-arg GITLAB_REPO_URL=$CI_PROJECT_URL --build-arg LBL_IMAGE_TIER=$LBL_IMAGE_TIER -t ${IMAGE_NAME}:${IMAGE_TAG} .
     - echo "Saving Docker image as artifact..."
     - docker save ${IMAGE_NAME}:${IMAGE_TAG} -o ${IMAGE_NAME}_${IMAGE_TAG}.tar
     - echo "Image built and saved successfully!"
@@ -56,6 +60,26 @@ scan_image:
     - docker load -i ${IMAGE_NAME}_${IMAGE_TAG}.tar
     - trivy image --exit-code 1 --severity HIGH,CRITICAL ${IMAGE_NAME}:${IMAGE_TAG}
   allow_failure: true
+
+  push_image:
+    stage: validate
+    dependencies:
+      - build_image
+      - test_image
+      - scan_image
+    script:
+      - echo "Logging in to local Artifactory Docker registry..."
+      - docker login ${ARTIFACTORY_URL}:5000 -u $ARTIFACTORY_USER -p $ARTIFACTORY_PASSWORD
+      - echo "Tagging image for Artifactory..."
+      - docker tag ${IMAGE_NAME}:${IMAGE_TAG} ${ARTIFACTORY_URL}:5000/${IMAGE_NAME}:${IMAGE_TAG}
+      - echo "Pushing image to Artifactory..."
+      - docker push ${ARTIFACTORY_URL}:5000/${IMAGE_NAME}:${IMAGE_TAG}
+      - echo "Image pushed successfully!"
+    only:
+      - main
+      - merge_requests
+    tags:
+      - docker
 
   # cleanup_artifacts:
   #   stage: cleanup
