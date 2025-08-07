@@ -7,10 +7,10 @@ variables:
   IMAGE_NAME: "test-app"
   IMAGE_TAG: "latest"
   LBL_IMAGE_TIER: "1"
-  ARTIFACTORY_URL: "http://artifactory/artifactory"
-  ARTIFACTORY_PORT: "80"
-  # ARTIFACTORY_USER: "me" # deployed via GitLab CI/CD secret
-  # ARTIFACTORY_PASSWORD: "your_password" # deployed via GitLab CI/CD secret
+  HARBOR_URL: "http://artifactory/artifactory"
+  HARBOR_PORT: "80"
+  # HARBOR_USER: "me" # deployed via GitLab CI/CD secret
+  # HARBOR_PASSWORD: "your_password" # deployed via GitLab CI/CD secret
 
 build_image:
   stage: build
@@ -70,12 +70,12 @@ push_image:
     - test_image
     - scan_image
   script:
-    - echo "Logging in to local Artifactory Docker registry..."
-    - docker login ${ARTIFACTORY_URL}:${ARTIFACTORY_PORT} -u $ARTIFACTORY_USER -p $ARTIFACTORY_PASSWORD
-    - echo "Tagging image for Artifactory..."
-    - docker tag ${IMAGE_NAME}:${IMAGE_TAG} ${ARTIFACTORY_URL}:${ARTIFACTORY_PORT}/${IMAGE_NAME}:${IMAGE_TAG}
-    - echo "Pushing image to Artifactory..."
-    - docker push ${ARTIFACTORY_URL}:${ARTIFACTORY_PORT}/${IMAGE_NAME}:${IMAGE_TAG}
+    - echo "Logging in to local Harbor Docker registry..."
+    - docker login ${HARBOR_URL}:${HARBOR_PORT} -u $HARBOR_USER -p $HARBOR_PASSWORD
+    - echo "Tagging image for Harbor..."
+    - docker tag ${IMAGE_NAME}:${IMAGE_TAG} ${HARBOR_URL}:${HARBOR_PORT}/${IMAGE_NAME}:${IMAGE_TAG}
+    - echo "Pushing image to Harbor..."
+    - docker push ${HARBOR_URL}:${HARBOR_PORT}/${IMAGE_NAME}:${IMAGE_TAG}
     - echo "Image pushed successfully!"
   only:
     - main
